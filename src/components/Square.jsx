@@ -21,6 +21,9 @@ export default function Square({ position, src, onDragStart, onDrop }) {
       onDragStart={onDragStart}
     >
       {src && <Piece src={src} />} {/* Render piece if it exists */}
+
+      {position[1]==='1' &&<p className="text size-1">{position}</p>}
+      { position[1]!=='1' && position[0]==='a' &&<p className="text size-1">{position[1]}</p>}
     </div>
   );
 }
