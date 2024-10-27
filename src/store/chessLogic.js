@@ -219,7 +219,7 @@ export const IsLegalMove = (fromSquare, toSquare, draggedPiece,board) => {
         // Implement logic for black pawn movement
         if (fromSquare[0] === toSquare[0] && fromSquare[1] < toSquare[1]) {
           // console.log("piece type is", pieceType);
-          console.log('piece on desstination is ',board[getSquareIndex(toSquare)].piece[0])
+          // console.log('piece on desstination is ',board[getSquareIndex(toSquare)].piece)
           return true;
         } else {
           return false;
