@@ -34,9 +34,10 @@ colorFun.setColor=setColor;
     }
   }, [oppMove]);
 
-  useEffect(() => {
-    turnFun.setTurn = setWhiteTurn; // This syncs `setWhiteTurn` with the server’s turn update
-  }, []);
+useEffect(() => {
+ // turnFun.setTurn = setWhiteTurn; // This syncs `setWhiteTurn` with the server’s turn update
+ console.log("turn changed")
+}, [whiteTurn]);
 
 
   // Update board function

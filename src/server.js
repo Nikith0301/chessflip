@@ -39,7 +39,7 @@ io.on("connection", (socket) => {
         if(playerColor===data.color){
             // console.log(`Move from ${playerColor}:`, data);
             socket.to("chess-room").emit('move', data);
-            console.log(turn)
+            console
             socket.to("chess-room").emit('turnchange',turn);
         }
         else{
