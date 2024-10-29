@@ -40,59 +40,110 @@ for (let r = 7; r >= 0; r--) {
 
 
 // Create the Zustand store
+// const useChessStore = create((set) => ({
+//   board: boardObj,
+//   // whiteTurn:true,
+//   // setWhiteTurn: (isWhiteTurn) => set({ whiteTurn: isWhiteTurn }),
+
+//   movePiece: (moveFrom, moveTo,draggedPiece) =>
+//     set((state) => {
+//       let isMoveExecuted = false; // Track if the move is successfully executed
+//       const newBoard = state.board.map((square) => {
+        
+//         if (IsLegalMove(moveFrom, moveTo,draggedPiece,state.board)) {
+
+
+//           //*send MOve data to opponentso he can update as well
+//           const moveData={moveFrom:moveFrom,moveTo:moveTo,draggedPiece:draggedPiece}
+//           // const opp=
+//       clientmakeMove(moveData)
+      
+//           //*
+
+//           if (square.coordinate === moveFrom) {
+//             isMoveExecuted = true; // Set to true if the move is executed
+//             return { ...square, piece: "" }; // Clear the piece from the original location
+//           } else if (square.coordinate === moveTo) {
+//             const piece = state.board.find(
+//               (s) => s.coordinate === moveFrom
+//             ).piece;
+//             return { ...square, piece }; // Place the piece in the new location
+//           }
+//         }
+
+//         return square; // Return the square unchanged
+//       });
+//       return { board: newBoard  };
+//     }),
+
+//     responseMove: (moveFrom, moveTo,draggedPiece) => //!NO send MOve data to opponentso he can update as well
+//       set((state) => {
+//         const newBoard = state.board.map((square) => {
+          
+//           if (IsLegalMove(moveFrom, moveTo,draggedPiece,state.board)) {
+  
+//             if (square.coordinate === moveFrom) {
+//               return { ...square, piece: "" }; // Clear the piece from the original location
+//             } else if (square.coordinate === moveTo) {
+//               const piece = state.board.find(
+//                 (s) => s.coordinate === moveFrom
+//               ).piece;
+//               return { ...square, piece }; // Place the piece in the new location
+//             }
+//           }
+  
+//           return square; // Return the square unchanged
+//         });
+//         return { board: newBoard};
+//       }),
+// }));
+
+// export default useChessStore;
 const useChessStore = create((set) => ({
   board: boardObj,
-  whiteTurn:true,
-  setWhiteTurn: (isWhiteTurn) => set({ whiteTurn: isWhiteTurn }),
 
-  movePiece: (moveFrom, moveTo,draggedPiece) =>
+  movePiece: (moveFrom, moveTo, draggedPiece) => {
+    let isMoveExecuted = false; // Track if the move is successfully executed
+
     set((state) => {
       const newBoard = state.board.map((square) => {
-        
-        if (IsLegalMove(moveFrom, moveTo,draggedPiece,state.board)) {
-
-
-          //*send MOve data to opponentso he can update as well
-          const moveData={moveFrom:moveFrom,moveTo:moveTo,draggedPiece:draggedPiece}
-          // const opp=
-      clientmakeMove(moveData,!state.whiteTurn)
-      
-          //*
+        if (IsLegalMove(moveFrom, moveTo, draggedPiece, state.board)) {
+          const moveData = { moveFrom, moveTo, draggedPiece };
+          clientmakeMove(moveData);
+          isMoveExecuted = true; // Set to true if the move is executed
 
           if (square.coordinate === moveFrom) {
-            return { ...square, piece: "" }; // Clear the piece from the original location
+            return { ...square, piece: "" };
           } else if (square.coordinate === moveTo) {
-            const piece = state.board.find(
-              (s) => s.coordinate === moveFrom
-            ).piece;
-            return { ...square, piece }; // Place the piece in the new location
+            const piece = state.board.find((s) => s.coordinate === moveFrom).piece;
+            return { ...square, piece };
           }
         }
-
-        return square; // Return the square unchanged
+        return square;
       });
+
+      return { board: newBoard };
+    });
+
+    return isMoveExecuted; // Return the result of the move execution
+  },
+
+  responseMove: (moveFrom, moveTo, draggedPiece) =>
+    set((state) => {
+      const newBoard = state.board.map((square) => {
+        if (IsLegalMove(moveFrom, moveTo, draggedPiece, state.board)) {
+          if (square.coordinate === moveFrom) {
+            return { ...square, piece: "" };
+          } else if (square.coordinate === moveTo) {
+            const piece = state.board.find((s) => s.coordinate === moveFrom).piece;
+            return { ...square, piece };
+          }
+        }
+        return square;
+      });
+
       return { board: newBoard };
     }),
-    responseMove: (moveFrom, moveTo,draggedPiece) => //!NO send MOve data to opponentso he can update as well
-      set((state) => {
-        const newBoard = state.board.map((square) => {
-          
-          if (IsLegalMove(moveFrom, moveTo,draggedPiece,state.board)) {
-  
-            if (square.coordinate === moveFrom) {
-              return { ...square, piece: "" }; // Clear the piece from the original location
-            } else if (square.coordinate === moveTo) {
-              const piece = state.board.find(
-                (s) => s.coordinate === moveFrom
-              ).piece;
-              return { ...square, piece }; // Place the piece in the new location
-            }
-          }
-  
-          return square; // Return the square unchanged
-        });
-        return { board: newBoard, whiteTurn: state.whiteTurn };
-      }),
 }));
 
 export default useChessStore;

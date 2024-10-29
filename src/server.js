@@ -31,16 +31,16 @@ io.on("connection", (socket) => {
     }
     console.log(players[socket.id])
     socket.emit("assignColor",players[socket.id],socket.id)//* Send color assignment to client
-    socket.on('move', (data,turn) => {
+    socket.on('move', (data) => {
         // Broadcast move to other player
        
         const playerColor=players[socket.id]
 
-        if(playerColor===data.color){
+        if( playerColor===data.color){
             // console.log(`Move from ${playerColor}:`, data);
             socket.to("chess-room").emit('move', data);
-            console
-            socket.to("chess-room").emit('turnchange',turn);
+    
+            // socket.to("chess-room").emit('turnchange',turn);
         }
         else{
             console.log("invalid player is moving the piece// Worng color")
@@ -54,6 +54,15 @@ io.on("connection", (socket) => {
 
         
     });
+
+socket.on("flip",()=>{
+    for (let playerId in players) {
+        players[playerId] = players[playerId] === 'white' ? 'black' : 'white';
+      }
+    socket.to("chess-room").emit('flip',players);
+    socket.emit("assignColor",players[socket.id],socket.id)//* Send color assignment to client
+})
+
 });
 
 httpsServer.listen(3000, () => {

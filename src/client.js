@@ -16,11 +16,16 @@ export const respData = {
 export const colorFun = {
     clientColor: null,
     setColor: () => {}, // Placeholder; will be initialized by Board component
+    flipFun:()=>{},
+
 };
-export const turnFun={
-    clientTurn:null,
-    setTurn:()=>{}
-}
+
+
+
+// export const turnFun={
+//     clientTurn:null,
+//     setTurn:()=>{}
+// }
 
 socket.on('assignColor',(color,id)=>{
     assignedColor=color
@@ -28,10 +33,12 @@ socket.on('assignColor',(color,id)=>{
     console.log('Assigned color:', assignedColor,id);
 
 })
+socket.on("flip",(players)=>{colorFun.setColor(players[socket.id])})// this will upadte oppent flip color
 
 socket.on("turnchange",(turn)=>{
     console.log("Received turn from server:",turn)
-    turnFun.setTurn(turn)})// tell opponent to change move --> flip whiteTurn on opp.side
+    // turnFun.setTurn(turn)
+})// tell opponent to change move --> flip whiteTurn on opp.side
 
 // Listen for moves from the server
 socket.on('move', (moveData) => {
@@ -49,14 +56,18 @@ socket.on('move', (moveData) => {
 
 
 // Send a move (when the player makes a move on the frontend)
-export function clientmakeMove(moveData,turn) {
+export function clientmakeMove(moveData) {
     console.log(moveData,socket.id,"->",assignedColor)
     if(moveData.draggedPiece[0]==='w'){
-        moveData['color']='white'
+        moveData['color']='white'//* adding this info into moveData,says which color is the player
     }
     if(moveData.draggedPiece[0]==='b'){
         moveData['color']='black'
     }
    
-    socket.emit('move', moveData,turn);//* sends the moveData to the server where the socket.on('move', ...) event listener is defined. 
+    socket.emit('move', moveData);//* sends the moveData to the server where the socket.on('move', ...) event listener is defined. 
+}
+
+export function clientflipBoard(){
+    socket.emit("flip")
 }
